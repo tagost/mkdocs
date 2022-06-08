@@ -67,3 +67,4 @@ az vmss scale \
  az group delete \
       --name scalesetrg \
       --yes
+```
