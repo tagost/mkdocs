@@ -9,6 +9,7 @@ nav:
   - 'Guia de Usuario':
     - 'OpenSSL': 'openssl.md'
     - 'Helm Repository': 'helmcharts-github-pages.md'
+    - 'Azure': 'azure.md'
     - 'Nginx': 'nginx.md'
     - 'Docker': 'docker.md'
   - Acerca de: 'about.md'
