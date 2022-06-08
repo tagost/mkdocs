@@ -4,6 +4,7 @@ code cloud-init.yaml
 
 `cloud-config`
 
+```yaml
 package_upgrade: true
 packages:
   - nginx
@@ -14,22 +15,25 @@ write_files:
         Hello world from Virtual Machine Scale Set !
 runcmd:
   - service nginx restart
+```
   
-  
-  az group create \
-  --location westus \
-  --name scalesetrg
-  
-  az vmss create \
-  --resource-group scalesetrg \
-  --name webServerScaleSet \
-  --image UbuntuLTS \
-  --upgrade-policy-mode automatic \
-  --custom-data cloud-init.yaml \
-  --admin-username azureuser \
-  --generate-ssh-keys
-  
-#MONITOREO DEL LOAD BALANCER
+    az group create \
+    --location westus \
+    --name scalesetrg
+
+```
+az vmss create \
+--resource-group scalesetrg \
+--name webServerScaleSet \
+--image UbuntuLTS \
+--upgrade-policy-mode automatic \
+--custom-data cloud-init.yaml \
+--admin-username azureuser \
+--generate-ssh-keys
+```
+### MONITOREO DEL LOAD BALANCER
+---
+```
 az network lb probe create \
   --lb-name webServerScaleSetLB \
   --resource-group scalesetrg \
@@ -37,7 +41,8 @@ az network lb probe create \
   --port 80 \
   --protocol Http \
   --path /
-
+```
+```
 az network lb rule create \
   --resource-group scalesetrg \
   --name webServerLoadBalancerRuleWeb \
@@ -48,15 +53,17 @@ az network lb rule create \
   --frontend-ip-name loadBalancerFrontEnd \
   --frontend-port 80 \
   --protocol tcp
-
-
-#escalado manual
+```
+---
+### Escalado manual
+---
+```
 az vmss scale \
     --name MyVMScaleSet \
     --resource-group MyResourceGroup \
     --new-capacity 6
-
-
+```
+```
  az group delete \
       --name scalesetrg \
       --yes
