@@ -1,0 +1,15 @@
+site_name: Documentación de Tagost
+
+theme: 
+  name: material
+  highlightjs: true
+
+nav:
+  - Inicio: 'index.md'
+  - 'Guia de Usuario':
+    - 'OpenSSL': 'openssl.md'
+    - 'Helm Repository': 'helmcharts-github-pages.md'
+    - 'Nginx': 'nginx.md'
+    - 'Docker': 'docker.md'
+  - Acerca de: 'about.md'
+  
