@@ -295,7 +295,7 @@
       
         <li class="md-nav__item">
   <a href="#escalado-manual" class="md-nav__link">
-    escalado manual
+    Escalado manual
   </a>
   
 </li>
@@ -398,7 +398,7 @@
       
         <li class="md-nav__item">
   <a href="#escalado-manual" class="md-nav__link">
-    escalado manual
+    Escalado manual
   </a>
   
 </li>
@@ -417,10 +417,12 @@
                 
 
 
+  <h1>Azure</h1>
+
 <h3 id="implementacion-de-un-conjunto-de-escalado-en-azure-portal">Implementación de un conjunto de escalado en Azure Portal</h3>
 <p>code cloud-init.yaml</p>
 <p><code>cloud-config</code></p>
-<p>package_upgrade: true
+<pre><code class="language-yaml">package_upgrade: true
 packages:
   - nginx
 write_files:
@@ -429,27 +431,32 @@ write_files:
     content: |
         Hello world from Virtual Machine Scale Set !
 runcmd:
-  - service nginx restart</p>
-<p>az group create \
-  --location westus \
-  --name scalesetrg</p>
-<p>az vmss create \
-  --resource-group scalesetrg \
-  --name webServerScaleSet \
-  --image UbuntuLTS \
-  --upgrade-policy-mode automatic \
-  --custom-data cloud-init.yaml \
-  --admin-username azureuser \
-  --generate-ssh-keys</p>
-<h1 id="monitoreo-del-load-balancer">MONITOREO DEL LOAD BALANCER</h1>
-<p>az network lb probe create \
+  - service nginx restart
+</code></pre>
+<pre><code>az group create \
+--location westus \
+--name scalesetrg
+</code></pre>
+<pre><code>az vmss create \
+--resource-group scalesetrg \
+--name webServerScaleSet \
+--image UbuntuLTS \
+--upgrade-policy-mode automatic \
+--custom-data cloud-init.yaml \
+--admin-username azureuser \
+--generate-ssh-keys
+</code></pre>
+<h3 id="monitoreo-del-load-balancer">MONITOREO DEL LOAD BALANCER</h3>
+<hr />
+<pre><code>az network lb probe create \
   --lb-name webServerScaleSetLB \
   --resource-group scalesetrg \
   --name webServerHealth \
   --port 80 \
   --protocol Http \
-  --path /</p>
-<p>az network lb rule create \
+  --path /
+</code></pre>
+<pre><code>az network lb rule create \
   --resource-group scalesetrg \
   --name webServerLoadBalancerRuleWeb \
   --lb-name webServerScaleSetLB \
@@ -458,13 +465,18 @@ runcmd:
   --backend-port 80 \
   --frontend-ip-name loadBalancerFrontEnd \
   --frontend-port 80 \
-  --protocol tcp</p>
-<h1 id="escalado-manual">escalado manual</h1>
-<p>az vmss scale \
+  --protocol tcp
+</code></pre>
+<hr />
+<h3 id="escalado-manual">Escalado manual</h3>
+<hr />
+<pre><code>az vmss scale \
     --name MyVMScaleSet \
     --resource-group MyResourceGroup \
-    --new-capacity 6</p>
-<p>az group delete \
+    --new-capacity 6
+</code></pre>
+<p>```
+ az group delete \
       --name scalesetrg \
       --yes</p>
 
