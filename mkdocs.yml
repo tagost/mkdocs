@@ -15,8 +15,6 @@ markdown_extensions:
   - pymdownx.snippets
   - pymdownx.superfences
 
-
-
 nav:
   - Inicio: 'index.md'
   - 'Guia de Usuario':
@@ -26,4 +24,8 @@ nav:
     - 'Nginx': 'nginx.md'
     - 'Docker': 'docker.md'
   - Acerca de: 'about.md'
-  
+
+extra:
+  analytics:
+    provider: google
+    property: G-40ENHFYR3B
