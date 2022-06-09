@@ -54,7 +54,7 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="blue">
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="blue">
   
     
     
@@ -550,260 +550,260 @@
 
 
 <h1 id="self-signed-certificate">Self signed certificate</h1>
-<pre><code>mkdir -p ca/{root-ca,sub-ca,server}/{private,certs,newcerts,crl,csr}
+<div class="highlight"><pre><span></span><code>mkdir -p ca/{root-ca,sub-ca,server}/{private,certs,newcerts,crl,csr}
 touch ca/{root-ca,sub-ca}/index
 openssl rand -hex 16 &gt; ca/root-ca/serial
 openssl rand -hex 16 &gt; ca/sub-ca/serial
-</code></pre>
-<pre><code>cd ca/server/private/
-openssl req -new --newkey rsa:2048 -days 365 -nodes -x509 -subj '/CN=www.guillermososa.net' -keyout guillermososa.net.key -out guillermososa.net.crt
-openssl x509 -text -in guillermososa.net.crt -noout
-</code></pre>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nb">cd</span> ca/server/private/
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>openssl req -new --newkey rsa:2048 -days <span class="m">365</span> -nodes -x509 -subj <span class="s1">&#39;/CN=www.guillermososa.net&#39;</span> -keyout guillermososa.net.key -out guillermososa.net.crt
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>openssl x509 -text -in guillermososa.net.crt -noout
+</code></pre></div>
 <h2 id="create-the-private-key-for-root-casub-caserver">Create the private key for root-ca,sub-ca,server</h2>
-<pre><code class="language-bash">cd ca
-openssl genrsa -aes256 -out root-ca/private/ca.key 4096
-openssl genrsa -aes256 -out sub-ca/private/sub-ca.key 4096
-openssl genrsa -out server/private/server.key 2048
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">cd</span> ca
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>openssl genrsa -aes256 -out root-ca/private/ca.key <span class="m">4096</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>openssl genrsa -aes256 -out sub-ca/private/sub-ca.key <span class="m">4096</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>openssl genrsa -out server/private/server.key <span class="m">2048</span>
+</code></pre></div>
 <h2 id="create-root-caroot-caconf">Create root-ca/root-ca.conf</h2>
-<pre><code>cat &gt; root-ca/root-ca.conf &lt;&lt;EOF
-[ca]
-#/root/ca/root-ca/root-ca.conf
-#see man ca
-default_ca              = CA_default
-
-[CA_default]
-dir                     = /root/ca/root-ca
-certs                   = \$dir/certs
-crl_dir                 = \$dir/crl
-new_certs_dir           = \$dir/newcerts
-database                = \$dir/index
-serial                  = \$dir/serial
-RANDFILE                = \$dir/private/.rand
-
-private_key             = \$dir/private/ca.key
-certificate             = \$dir/certs/ca.crt
-
-crlnumber               = \$dir/crlnumber
-crl                     = \$dir/crl/ca.crl
-crl_extensions          = crl_ext
-default_crl_days        = 30
-
-default_md              = sha256
-
-name_opt                = ca_default
-cert_opt                = ca_default
-default_days            = 365
-preserve                = no
-policy                  = policy_strict
-
-[ policy_strict ]
-countryName             = supplied
-stateOrProvinceName     = supplied
-organizationName        = match
-organizationalUnitName  = optional
-commonName              = supplied
-emailAddress            = optional
-
-[ policy_loose ]
-countryName             = optional
-stateOrProvinceName     = optional
-localityName            = optional
-organizationName        = optional
-organizationalUnitName  = optional
-commonName              = supplied
-emailAddress            = optional
-
-[ req ]
-#Options for the req tool, man req.
-default_bits            = 2048
-distinguished_name      = req_distinguished_name
-string_mask             = utf8only
-default_md              =  sha256
-#Extension to add when the -x509 option is used.
-x509_extensions         = v3_ca
-
-[ req_distinguished_name ]
-countryName                     = Country Name (2 letter code)
-stateOrProvinceName             = State or Province Name
-localityName                    = Locality Name
-0.organizationName              = Organization Name
-organizationalUnitName          = Organizational Unit Name
-commonName                      = Common Name
-emailAddress                    = Email Address
-countryName_default             = GB
-stateOrProvinceName_default     = England
-0.organizationName_default      = TheUrbanPenguin Ltd
-
-[ v3_ca ]
-#Extensions to apply when createing root ca
-#Extensions for a typical CA, man x509v3_config
-subjectKeyIdentifier            = hash
-authorityKeyIdentifier          = keyid:always,issuer
-basicConstraints                = critical, CA:true
-keyUsage                        =  critical, digitalSignature, cRLSign, keyCertSign
-
-[ v3_intermediate_ca ]
-#Extensions to apply when creating intermediate or sub-ca
-#Extensions for a typical intermediate CA, same man as above
-subjectKeyIdentifier            = hash
-authorityKeyIdentifier          = keyid:always,issuer
-#pathlen:0 ensures no more sub-ca can be created below an intermediate
-basicConstraints                = critical, CA:true, pathlen:0
-keyUsage                        = critical, digitalSignature, cRLSign, keyCertSign
-
-[ server_cert ]
-#Extensions for server certificates
-basicConstraints                = CA:FALSE
-nsCertType                      = server
-nsComment                       =  &quot;OpenSSL Generated Server Certificate&quot;
-subjectKeyIdentifier            = hash
-authorityKeyIdentifier          = keyid,issuer:always
-keyUsage                        =  critical, digitalSignature, keyEncipherment
-extendedKeyUsage                = serverAuth
-
-EOF
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>cat &gt; root-ca/root-ca.conf &lt;&lt;EOF
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>[ca]
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>#/root/ca/root-ca/root-ca.conf
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>#see man ca
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>default_ca              = CA_default
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>[CA_default]
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>dir                     = /root/ca/root-ca
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>certs                   = \$dir/certs
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>crl_dir                 = \$dir/crl
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>new_certs_dir           = \$dir/newcerts
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>database                = \$dir/index
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>serial                  = \$dir/serial
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>RANDFILE                = \$dir/private/.rand
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>private_key             = \$dir/private/ca.key
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>certificate             = \$dir/certs/ca.crt
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>crlnumber               = \$dir/crlnumber
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>crl                     = \$dir/crl/ca.crl
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>crl_extensions          = crl_ext
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>default_crl_days        = 30
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>default_md              = sha256
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>name_opt                = ca_default
+<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>cert_opt                = ca_default
+<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a>default_days            = 365
+<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a>preserve                = no
+<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a>policy                  = policy_strict
+<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a>
+<a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a>[ policy_strict ]
+<a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a>countryName             = supplied
+<a id="__codelineno-2-34" name="__codelineno-2-34" href="#__codelineno-2-34"></a>stateOrProvinceName     = supplied
+<a id="__codelineno-2-35" name="__codelineno-2-35" href="#__codelineno-2-35"></a>organizationName        = match
+<a id="__codelineno-2-36" name="__codelineno-2-36" href="#__codelineno-2-36"></a>organizationalUnitName  = optional
+<a id="__codelineno-2-37" name="__codelineno-2-37" href="#__codelineno-2-37"></a>commonName              = supplied
+<a id="__codelineno-2-38" name="__codelineno-2-38" href="#__codelineno-2-38"></a>emailAddress            = optional
+<a id="__codelineno-2-39" name="__codelineno-2-39" href="#__codelineno-2-39"></a>
+<a id="__codelineno-2-40" name="__codelineno-2-40" href="#__codelineno-2-40"></a>[ policy_loose ]
+<a id="__codelineno-2-41" name="__codelineno-2-41" href="#__codelineno-2-41"></a>countryName             = optional
+<a id="__codelineno-2-42" name="__codelineno-2-42" href="#__codelineno-2-42"></a>stateOrProvinceName     = optional
+<a id="__codelineno-2-43" name="__codelineno-2-43" href="#__codelineno-2-43"></a>localityName            = optional
+<a id="__codelineno-2-44" name="__codelineno-2-44" href="#__codelineno-2-44"></a>organizationName        = optional
+<a id="__codelineno-2-45" name="__codelineno-2-45" href="#__codelineno-2-45"></a>organizationalUnitName  = optional
+<a id="__codelineno-2-46" name="__codelineno-2-46" href="#__codelineno-2-46"></a>commonName              = supplied
+<a id="__codelineno-2-47" name="__codelineno-2-47" href="#__codelineno-2-47"></a>emailAddress            = optional
+<a id="__codelineno-2-48" name="__codelineno-2-48" href="#__codelineno-2-48"></a>
+<a id="__codelineno-2-49" name="__codelineno-2-49" href="#__codelineno-2-49"></a>[ req ]
+<a id="__codelineno-2-50" name="__codelineno-2-50" href="#__codelineno-2-50"></a>#Options for the req tool, man req.
+<a id="__codelineno-2-51" name="__codelineno-2-51" href="#__codelineno-2-51"></a>default_bits            = 2048
+<a id="__codelineno-2-52" name="__codelineno-2-52" href="#__codelineno-2-52"></a>distinguished_name      = req_distinguished_name
+<a id="__codelineno-2-53" name="__codelineno-2-53" href="#__codelineno-2-53"></a>string_mask             = utf8only
+<a id="__codelineno-2-54" name="__codelineno-2-54" href="#__codelineno-2-54"></a>default_md              =  sha256
+<a id="__codelineno-2-55" name="__codelineno-2-55" href="#__codelineno-2-55"></a>#Extension to add when the -x509 option is used.
+<a id="__codelineno-2-56" name="__codelineno-2-56" href="#__codelineno-2-56"></a>x509_extensions         = v3_ca
+<a id="__codelineno-2-57" name="__codelineno-2-57" href="#__codelineno-2-57"></a>
+<a id="__codelineno-2-58" name="__codelineno-2-58" href="#__codelineno-2-58"></a>[ req_distinguished_name ]
+<a id="__codelineno-2-59" name="__codelineno-2-59" href="#__codelineno-2-59"></a>countryName                     = Country Name (2 letter code)
+<a id="__codelineno-2-60" name="__codelineno-2-60" href="#__codelineno-2-60"></a>stateOrProvinceName             = State or Province Name
+<a id="__codelineno-2-61" name="__codelineno-2-61" href="#__codelineno-2-61"></a>localityName                    = Locality Name
+<a id="__codelineno-2-62" name="__codelineno-2-62" href="#__codelineno-2-62"></a>0.organizationName              = Organization Name
+<a id="__codelineno-2-63" name="__codelineno-2-63" href="#__codelineno-2-63"></a>organizationalUnitName          = Organizational Unit Name
+<a id="__codelineno-2-64" name="__codelineno-2-64" href="#__codelineno-2-64"></a>commonName                      = Common Name
+<a id="__codelineno-2-65" name="__codelineno-2-65" href="#__codelineno-2-65"></a>emailAddress                    = Email Address
+<a id="__codelineno-2-66" name="__codelineno-2-66" href="#__codelineno-2-66"></a>countryName_default             = GB
+<a id="__codelineno-2-67" name="__codelineno-2-67" href="#__codelineno-2-67"></a>stateOrProvinceName_default     = England
+<a id="__codelineno-2-68" name="__codelineno-2-68" href="#__codelineno-2-68"></a>0.organizationName_default      = TheUrbanPenguin Ltd
+<a id="__codelineno-2-69" name="__codelineno-2-69" href="#__codelineno-2-69"></a>
+<a id="__codelineno-2-70" name="__codelineno-2-70" href="#__codelineno-2-70"></a>[ v3_ca ]
+<a id="__codelineno-2-71" name="__codelineno-2-71" href="#__codelineno-2-71"></a>#Extensions to apply when createing root ca
+<a id="__codelineno-2-72" name="__codelineno-2-72" href="#__codelineno-2-72"></a>#Extensions for a typical CA, man x509v3_config
+<a id="__codelineno-2-73" name="__codelineno-2-73" href="#__codelineno-2-73"></a>subjectKeyIdentifier            = hash
+<a id="__codelineno-2-74" name="__codelineno-2-74" href="#__codelineno-2-74"></a>authorityKeyIdentifier          = keyid:always,issuer
+<a id="__codelineno-2-75" name="__codelineno-2-75" href="#__codelineno-2-75"></a>basicConstraints                = critical, CA:true
+<a id="__codelineno-2-76" name="__codelineno-2-76" href="#__codelineno-2-76"></a>keyUsage                        =  critical, digitalSignature, cRLSign, keyCertSign
+<a id="__codelineno-2-77" name="__codelineno-2-77" href="#__codelineno-2-77"></a>
+<a id="__codelineno-2-78" name="__codelineno-2-78" href="#__codelineno-2-78"></a>[ v3_intermediate_ca ]
+<a id="__codelineno-2-79" name="__codelineno-2-79" href="#__codelineno-2-79"></a>#Extensions to apply when creating intermediate or sub-ca
+<a id="__codelineno-2-80" name="__codelineno-2-80" href="#__codelineno-2-80"></a>#Extensions for a typical intermediate CA, same man as above
+<a id="__codelineno-2-81" name="__codelineno-2-81" href="#__codelineno-2-81"></a>subjectKeyIdentifier            = hash
+<a id="__codelineno-2-82" name="__codelineno-2-82" href="#__codelineno-2-82"></a>authorityKeyIdentifier          = keyid:always,issuer
+<a id="__codelineno-2-83" name="__codelineno-2-83" href="#__codelineno-2-83"></a>#pathlen:0 ensures no more sub-ca can be created below an intermediate
+<a id="__codelineno-2-84" name="__codelineno-2-84" href="#__codelineno-2-84"></a>basicConstraints                = critical, CA:true, pathlen:0
+<a id="__codelineno-2-85" name="__codelineno-2-85" href="#__codelineno-2-85"></a>keyUsage                        = critical, digitalSignature, cRLSign, keyCertSign
+<a id="__codelineno-2-86" name="__codelineno-2-86" href="#__codelineno-2-86"></a>
+<a id="__codelineno-2-87" name="__codelineno-2-87" href="#__codelineno-2-87"></a>[ server_cert ]
+<a id="__codelineno-2-88" name="__codelineno-2-88" href="#__codelineno-2-88"></a>#Extensions for server certificates
+<a id="__codelineno-2-89" name="__codelineno-2-89" href="#__codelineno-2-89"></a>basicConstraints                = CA:FALSE
+<a id="__codelineno-2-90" name="__codelineno-2-90" href="#__codelineno-2-90"></a>nsCertType                      = server
+<a id="__codelineno-2-91" name="__codelineno-2-91" href="#__codelineno-2-91"></a>nsComment                       =  &quot;OpenSSL Generated Server Certificate&quot;
+<a id="__codelineno-2-92" name="__codelineno-2-92" href="#__codelineno-2-92"></a>subjectKeyIdentifier            = hash
+<a id="__codelineno-2-93" name="__codelineno-2-93" href="#__codelineno-2-93"></a>authorityKeyIdentifier          = keyid,issuer:always
+<a id="__codelineno-2-94" name="__codelineno-2-94" href="#__codelineno-2-94"></a>keyUsage                        =  critical, digitalSignature, keyEncipherment
+<a id="__codelineno-2-95" name="__codelineno-2-95" href="#__codelineno-2-95"></a>extendedKeyUsage                = serverAuth
+<a id="__codelineno-2-96" name="__codelineno-2-96" href="#__codelineno-2-96"></a>
+<a id="__codelineno-2-97" name="__codelineno-2-97" href="#__codelineno-2-97"></a>EOF
+</code></pre></div>
 <h2 id="create-the-root-certificate">Create the root certificate</h2>
-<pre><code class="language-bash">cd root-ca/
-openssl req -config root-ca.conf -key private/ca.key -new -x509 -days 7500 -sha256 -extensions v3_ca -out certs/ca.crt
-openssl x509 -noout -in certs/ca.crt -text
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">cd</span> root-ca/
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>openssl req -config root-ca.conf -key private/ca.key -new -x509 -days <span class="m">7500</span> -sha256 -extensions v3_ca -out certs/ca.crt
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>openssl x509 -noout -in certs/ca.crt -text
+</code></pre></div>
 <h2 id="create-the-intermediate-certificate">Create the intermediate certificate</h2>
-<pre><code>cd ../sub-ca
-
-cat &gt; sub-ca.conf &lt;&lt;EOF
-[ca]
-#/root/ca/root-ca/root-ca.conf
-#see man ca
-default_ca              = CA_default
-
-[CA_default]
-dir                     = /root/ca/sub-ca
-certs                   = \$dir/certs
-crl_dir                 = \$dir/crl
-new_certs_dir           = \$dir/newcerts
-database                = \$dir/index
-serial                  = \$dir/serial
-RANDFILE                = \$dir/private/.rand
-
-private_key             = \$dir/private/ca.key
-certificate             = \$dir/certs/ca.crt
-
-crlnumber               = \$dir/crlnumber
-crl                     = \$dir/crl/ca.crl
-crl_extensions          = crl_ext
-default_crl_days        = 30
-
-default_md              = sha256
-
-name_opt                = ca_default
-cert_opt                = ca_default
-default_days            = 365
-preserve                = no
-policy                  = policy_strict
-
-[ policy_strict ]
-countryName             = supplied
-stateOrProvinceName     = supplied
-organizationName        = match
-organizationalUnitName  = optional
-commonName              = supplied
-emailAddress            = optional
-
-[ policy_loose ]
-countryName             = optional
-stateOrProvinceName     = optional
-localityName            = optional
-organizationName        = optional
-organizationalUnitName  = optional
-commonName              = supplied
-emailAddress            = optional
-
-[ req ]
-#Options for the req tool, man req.
-default_bits            = 2048
-distinguished_name      = req_distinguished_name
-string_mask             = utf8only
-default_md              =  sha256
-#Extension to add when the -x509 option is used.
-x509_extensions         = v3_ca
-
-[ req_distinguished_name ]
-countryName                     = Country Name (2 letter code)
-stateOrProvinceName             = State or Province Name
-localityName                    = Locality Name
-0.organizationName              = Organization Name
-organizationalUnitName          = Organizational Unit Name
-commonName                      = Common Name
-emailAddress                    = Email Address
-countryName_default             = GB
-stateOrProvinceName_default     = England
-0.organizationName_default      = TheUrbanPenguin Ltd
-
-[ v3_ca ]
-#Extensions to apply when createing root ca
-#Extensions for a typical CA, man x509v3_config
-subjectKeyIdentifier            = hash
-authorityKeyIdentifier          = keyid:always,issuer
-basicConstraints                = critical, CA:true
-keyUsage                        =  critical, digitalSignature, cRLSign, keyCertSign
-
-[ v3_intermediate_ca ]
-#Extensions to apply when creating intermediate or sub-ca
-#Extensions for a typical intermediate CA, same man as above
-subjectKeyIdentifier            = hash
-authorityKeyIdentifier          = keyid:always,issuer
-#pathlen:0 ensures no more sub-ca can be created below an intermediate
-basicConstraints                = critical, CA:true, pathlen:0
-keyUsage                        = critical, digitalSignature, cRLSign, keyCertSign
-
-[ server_cert ]
-#Extensions for server certificates
-basicConstraints                = CA:FALSE
-nsCertType                      = server
-nsComment                       =  &quot;OpenSSL Generated Server Certificate&quot;
-subjectKeyIdentifier            = hash
-authorityKeyIdentifier          = keyid,issuer:always
-keyUsage                        =  critical, digitalSignature, keyEncipherment
-extendedKeyUsage                = serverAuth
-subjectAltName                  = @alt_names
-
-[alt_names]
-DNS.1                           = guillermososa.net # Be sure to include the domain name here because Common Name is not so commonly honoured by itself
-DNS.2                           = www.guillermososa.net # Optionally, add additional domains (I've added a subdomain here)
-IP.1                            = 192.168.101.101 # Optionally, add an IP address (if the connection which you have planned requires it)
-
-EOF
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>cd ../sub-ca
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>cat &gt; sub-ca.conf &lt;&lt;EOF
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>[ca]
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>#/root/ca/root-ca/root-ca.conf
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>#see man ca
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>default_ca              = CA_default
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>[CA_default]
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>dir                     = /root/ca/sub-ca
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>certs                   = \$dir/certs
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>crl_dir                 = \$dir/crl
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>new_certs_dir           = \$dir/newcerts
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>database                = \$dir/index
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>serial                  = \$dir/serial
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>RANDFILE                = \$dir/private/.rand
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>private_key             = \$dir/private/ca.key
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>certificate             = \$dir/certs/ca.crt
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>crlnumber               = \$dir/crlnumber
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>crl                     = \$dir/crl/ca.crl
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>crl_extensions          = crl_ext
+<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>default_crl_days        = 30
+<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a>
+<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a>default_md              = sha256
+<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a>
+<a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a>name_opt                = ca_default
+<a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a>cert_opt                = ca_default
+<a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a>default_days            = 365
+<a id="__codelineno-4-31" name="__codelineno-4-31" href="#__codelineno-4-31"></a>preserve                = no
+<a id="__codelineno-4-32" name="__codelineno-4-32" href="#__codelineno-4-32"></a>policy                  = policy_strict
+<a id="__codelineno-4-33" name="__codelineno-4-33" href="#__codelineno-4-33"></a>
+<a id="__codelineno-4-34" name="__codelineno-4-34" href="#__codelineno-4-34"></a>[ policy_strict ]
+<a id="__codelineno-4-35" name="__codelineno-4-35" href="#__codelineno-4-35"></a>countryName             = supplied
+<a id="__codelineno-4-36" name="__codelineno-4-36" href="#__codelineno-4-36"></a>stateOrProvinceName     = supplied
+<a id="__codelineno-4-37" name="__codelineno-4-37" href="#__codelineno-4-37"></a>organizationName        = match
+<a id="__codelineno-4-38" name="__codelineno-4-38" href="#__codelineno-4-38"></a>organizationalUnitName  = optional
+<a id="__codelineno-4-39" name="__codelineno-4-39" href="#__codelineno-4-39"></a>commonName              = supplied
+<a id="__codelineno-4-40" name="__codelineno-4-40" href="#__codelineno-4-40"></a>emailAddress            = optional
+<a id="__codelineno-4-41" name="__codelineno-4-41" href="#__codelineno-4-41"></a>
+<a id="__codelineno-4-42" name="__codelineno-4-42" href="#__codelineno-4-42"></a>[ policy_loose ]
+<a id="__codelineno-4-43" name="__codelineno-4-43" href="#__codelineno-4-43"></a>countryName             = optional
+<a id="__codelineno-4-44" name="__codelineno-4-44" href="#__codelineno-4-44"></a>stateOrProvinceName     = optional
+<a id="__codelineno-4-45" name="__codelineno-4-45" href="#__codelineno-4-45"></a>localityName            = optional
+<a id="__codelineno-4-46" name="__codelineno-4-46" href="#__codelineno-4-46"></a>organizationName        = optional
+<a id="__codelineno-4-47" name="__codelineno-4-47" href="#__codelineno-4-47"></a>organizationalUnitName  = optional
+<a id="__codelineno-4-48" name="__codelineno-4-48" href="#__codelineno-4-48"></a>commonName              = supplied
+<a id="__codelineno-4-49" name="__codelineno-4-49" href="#__codelineno-4-49"></a>emailAddress            = optional
+<a id="__codelineno-4-50" name="__codelineno-4-50" href="#__codelineno-4-50"></a>
+<a id="__codelineno-4-51" name="__codelineno-4-51" href="#__codelineno-4-51"></a>[ req ]
+<a id="__codelineno-4-52" name="__codelineno-4-52" href="#__codelineno-4-52"></a>#Options for the req tool, man req.
+<a id="__codelineno-4-53" name="__codelineno-4-53" href="#__codelineno-4-53"></a>default_bits            = 2048
+<a id="__codelineno-4-54" name="__codelineno-4-54" href="#__codelineno-4-54"></a>distinguished_name      = req_distinguished_name
+<a id="__codelineno-4-55" name="__codelineno-4-55" href="#__codelineno-4-55"></a>string_mask             = utf8only
+<a id="__codelineno-4-56" name="__codelineno-4-56" href="#__codelineno-4-56"></a>default_md              =  sha256
+<a id="__codelineno-4-57" name="__codelineno-4-57" href="#__codelineno-4-57"></a>#Extension to add when the -x509 option is used.
+<a id="__codelineno-4-58" name="__codelineno-4-58" href="#__codelineno-4-58"></a>x509_extensions         = v3_ca
+<a id="__codelineno-4-59" name="__codelineno-4-59" href="#__codelineno-4-59"></a>
+<a id="__codelineno-4-60" name="__codelineno-4-60" href="#__codelineno-4-60"></a>[ req_distinguished_name ]
+<a id="__codelineno-4-61" name="__codelineno-4-61" href="#__codelineno-4-61"></a>countryName                     = Country Name (2 letter code)
+<a id="__codelineno-4-62" name="__codelineno-4-62" href="#__codelineno-4-62"></a>stateOrProvinceName             = State or Province Name
+<a id="__codelineno-4-63" name="__codelineno-4-63" href="#__codelineno-4-63"></a>localityName                    = Locality Name
+<a id="__codelineno-4-64" name="__codelineno-4-64" href="#__codelineno-4-64"></a>0.organizationName              = Organization Name
+<a id="__codelineno-4-65" name="__codelineno-4-65" href="#__codelineno-4-65"></a>organizationalUnitName          = Organizational Unit Name
+<a id="__codelineno-4-66" name="__codelineno-4-66" href="#__codelineno-4-66"></a>commonName                      = Common Name
+<a id="__codelineno-4-67" name="__codelineno-4-67" href="#__codelineno-4-67"></a>emailAddress                    = Email Address
+<a id="__codelineno-4-68" name="__codelineno-4-68" href="#__codelineno-4-68"></a>countryName_default             = GB
+<a id="__codelineno-4-69" name="__codelineno-4-69" href="#__codelineno-4-69"></a>stateOrProvinceName_default     = England
+<a id="__codelineno-4-70" name="__codelineno-4-70" href="#__codelineno-4-70"></a>0.organizationName_default      = TheUrbanPenguin Ltd
+<a id="__codelineno-4-71" name="__codelineno-4-71" href="#__codelineno-4-71"></a>
+<a id="__codelineno-4-72" name="__codelineno-4-72" href="#__codelineno-4-72"></a>[ v3_ca ]
+<a id="__codelineno-4-73" name="__codelineno-4-73" href="#__codelineno-4-73"></a>#Extensions to apply when createing root ca
+<a id="__codelineno-4-74" name="__codelineno-4-74" href="#__codelineno-4-74"></a>#Extensions for a typical CA, man x509v3_config
+<a id="__codelineno-4-75" name="__codelineno-4-75" href="#__codelineno-4-75"></a>subjectKeyIdentifier            = hash
+<a id="__codelineno-4-76" name="__codelineno-4-76" href="#__codelineno-4-76"></a>authorityKeyIdentifier          = keyid:always,issuer
+<a id="__codelineno-4-77" name="__codelineno-4-77" href="#__codelineno-4-77"></a>basicConstraints                = critical, CA:true
+<a id="__codelineno-4-78" name="__codelineno-4-78" href="#__codelineno-4-78"></a>keyUsage                        =  critical, digitalSignature, cRLSign, keyCertSign
+<a id="__codelineno-4-79" name="__codelineno-4-79" href="#__codelineno-4-79"></a>
+<a id="__codelineno-4-80" name="__codelineno-4-80" href="#__codelineno-4-80"></a>[ v3_intermediate_ca ]
+<a id="__codelineno-4-81" name="__codelineno-4-81" href="#__codelineno-4-81"></a>#Extensions to apply when creating intermediate or sub-ca
+<a id="__codelineno-4-82" name="__codelineno-4-82" href="#__codelineno-4-82"></a>#Extensions for a typical intermediate CA, same man as above
+<a id="__codelineno-4-83" name="__codelineno-4-83" href="#__codelineno-4-83"></a>subjectKeyIdentifier            = hash
+<a id="__codelineno-4-84" name="__codelineno-4-84" href="#__codelineno-4-84"></a>authorityKeyIdentifier          = keyid:always,issuer
+<a id="__codelineno-4-85" name="__codelineno-4-85" href="#__codelineno-4-85"></a>#pathlen:0 ensures no more sub-ca can be created below an intermediate
+<a id="__codelineno-4-86" name="__codelineno-4-86" href="#__codelineno-4-86"></a>basicConstraints                = critical, CA:true, pathlen:0
+<a id="__codelineno-4-87" name="__codelineno-4-87" href="#__codelineno-4-87"></a>keyUsage                        = critical, digitalSignature, cRLSign, keyCertSign
+<a id="__codelineno-4-88" name="__codelineno-4-88" href="#__codelineno-4-88"></a>
+<a id="__codelineno-4-89" name="__codelineno-4-89" href="#__codelineno-4-89"></a>[ server_cert ]
+<a id="__codelineno-4-90" name="__codelineno-4-90" href="#__codelineno-4-90"></a>#Extensions for server certificates
+<a id="__codelineno-4-91" name="__codelineno-4-91" href="#__codelineno-4-91"></a>basicConstraints                = CA:FALSE
+<a id="__codelineno-4-92" name="__codelineno-4-92" href="#__codelineno-4-92"></a>nsCertType                      = server
+<a id="__codelineno-4-93" name="__codelineno-4-93" href="#__codelineno-4-93"></a>nsComment                       =  &quot;OpenSSL Generated Server Certificate&quot;
+<a id="__codelineno-4-94" name="__codelineno-4-94" href="#__codelineno-4-94"></a>subjectKeyIdentifier            = hash
+<a id="__codelineno-4-95" name="__codelineno-4-95" href="#__codelineno-4-95"></a>authorityKeyIdentifier          = keyid,issuer:always
+<a id="__codelineno-4-96" name="__codelineno-4-96" href="#__codelineno-4-96"></a>keyUsage                        =  critical, digitalSignature, keyEncipherment
+<a id="__codelineno-4-97" name="__codelineno-4-97" href="#__codelineno-4-97"></a>extendedKeyUsage                = serverAuth
+<a id="__codelineno-4-98" name="__codelineno-4-98" href="#__codelineno-4-98"></a>subjectAltName                  = @alt_names
+<a id="__codelineno-4-99" name="__codelineno-4-99" href="#__codelineno-4-99"></a>
+<a id="__codelineno-4-100" name="__codelineno-4-100" href="#__codelineno-4-100"></a>[alt_names]
+<a id="__codelineno-4-101" name="__codelineno-4-101" href="#__codelineno-4-101"></a>DNS.1                           = guillermososa.net # Be sure to include the domain name here because Common Name is not so commonly honoured by itself
+<a id="__codelineno-4-102" name="__codelineno-4-102" href="#__codelineno-4-102"></a>DNS.2                           = www.guillermososa.net # Optionally, add additional domains (I&#39;ve added a subdomain here)
+<a id="__codelineno-4-103" name="__codelineno-4-103" href="#__codelineno-4-103"></a>IP.1                            = 192.168.101.101 # Optionally, add an IP address (if the connection which you have planned requires it)
+<a id="__codelineno-4-104" name="__codelineno-4-104" href="#__codelineno-4-104"></a>
+<a id="__codelineno-4-105" name="__codelineno-4-105" href="#__codelineno-4-105"></a>EOF
+</code></pre></div>
 <h2 id="create-the-certificate-signed-request-for-the-sub-ca">create the certificate signed request for the sub-ca</h2>
 <p><code>openssl req -config sub-ca.conf -new -key private/sub-ca.key -sha256 -out csr/sub-ca.csr</code></p>
 <h3 id="create-the-sub-ca-certificate">create the sub-ca certificate</h3>
-<pre><code>cd /root/ca/root-ca/
-openssl ca -config root-ca.conf -extensions v3_intermediate_ca -days 3650 -notext -in ../sub-ca/csr/sub-ca.csr  -out ../sub-ca/certs/sub-ca.crt
-
-openssl x509 -noout -text -in ../sub-ca/certs/sub-ca.crt
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>cd /root/ca/root-ca/
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>openssl ca -config root-ca.conf -extensions v3_intermediate_ca -days 3650 -notext -in ../sub-ca/csr/sub-ca.csr  -out ../sub-ca/certs/sub-ca.crt
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>openssl x509 -noout -text -in ../sub-ca/certs/sub-ca.crt
+</code></pre></div>
 <h3 id="create-server-certificates">Create server certificates</h3>
 <h4 id="create-server-csr">Create server csr</h4>
-<pre><code class="language-bash">cd /root/ca/server
-openssl req -key private/server.key -new -sha256 -out csr/server.csr
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nb">cd</span> /root/ca/server
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>openssl req -key private/server.key -new -sha256 -out csr/server.csr
+</code></pre></div>
 <h4 id="create-the-signed-certificate">create the signed certificate</h4>
-<pre><code class="language-bash">cd ../sub-ca/
-openssl ca -config sub-ca.conf -extensions server_cert -days 365 -notext -in ../server/csr/server.csr -out ../server/certs/server.crt
-
-cd ../server/certs/
-#for nginx
-cat server.crt ../../sub-ca/certs/sub-ca.crt &gt; chained.crt
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nb">cd</span> ../sub-ca/
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>openssl ca -config sub-ca.conf -extensions server_cert -days <span class="m">365</span> -notext -in ../server/csr/server.csr -out ../server/certs/server.crt
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="nb">cd</span> ../server/certs/
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1">#for nginx</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>cat server.crt ../../sub-ca/certs/sub-ca.crt &gt; chained.crt
+</code></pre></div>
 <h4 id="test-the-server-certificate">Test the server certificate</h4>
-<pre><code class="language-bash">#add certificate to trusted
-cp /root/ca/root-ca/certs/ca.crt /usr/local/share/ca-certificates/
-update-ca-certificates
-
-openssl s_server -accept 443 -www -key private/server.key -cert certs/server.crt -CAfile ../sub-ca/certs/sub-ca.crt
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1">#add certificate to trusted</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>cp /root/ca/root-ca/certs/ca.crt /usr/local/share/ca-certificates/
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>update-ca-certificates
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>openssl s_server -accept <span class="m">443</span> -www -key private/server.key -cert certs/server.crt -CAfile ../sub-ca/certs/sub-ca.crt
+</code></pre></div>
 
               
             </article>

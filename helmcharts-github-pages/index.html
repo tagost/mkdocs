@@ -54,7 +54,7 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="blue">
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="blue">
   
     
     
@@ -440,16 +440,16 @@
 
 
 <h1 id="crear-repositorio-helmcharts">Crear repositorio helmcharts</h1>
-<pre><code class="language-bash">git clone https://github.com/tagost/helmcharts.git
-
-cd helmcharts
-
-helm create testchart
-
-helm install --dry-run debug .
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>git clone https://github.com/tagost/helmcharts.git
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nb">cd</span> helmcharts
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>helm create testchart
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>helm install --dry-run debug .
+</code></pre></div>
 <h2 id="editar-los-templetes-de-acuerdo-a-tu-aplicacion">Editar los templetes de acuerdo a tu aplicación</h2>
-<pre><code>helm package testchart/
+<div class="highlight"><pre><span></span><code>helm package testchart/
 
 mkdir charts
 
@@ -458,7 +458,7 @@ mv testchart-0.1.0.tgz charts/
 helm repo index .
 
 git add .
-git commit -m "add testchart"
+git commit -m &quot;add testchart&quot;
 git push origin main
 
 helm repo add myrepo https://tagost.github.io/helmcharts/
@@ -472,7 +472,7 @@ helm search repo myrepo
 helm install myrepo/testchart
 
 helm uninstall testchart
-</code></pre>
+</code></pre></div>
 <h3 id="add-dependency">add dependency</h3>
 <h3 id="now-we-will-add-the-dependency-section-in-the-chartsyaml-file">Now we will add the dependency section in the Charts.yaml file</h3>
 <p>cat &gt;&gt; testchart/Chart.yaml &lt;&lt;EOF</p>
