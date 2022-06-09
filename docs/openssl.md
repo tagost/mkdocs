@@ -5,7 +5,7 @@
     openssl rand -hex 16 > ca/root-ca/serial
     openssl rand -hex 16 > ca/sub-ca/serial
 
-```
+``` bash
 cd ca/server/private/
 openssl req -new --newkey rsa:2048 -days 365 -nodes -x509 -subj '/CN=www.guillermososa.net' -keyout guillermososa.net.key -out guillermososa.net.crt
 openssl x509 -text -in guillermososa.net.crt -noout

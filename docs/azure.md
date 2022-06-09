@@ -4,7 +4,7 @@ code cloud-init.yaml
 
 `cloud-config`
 
-```yaml
+``` yaml
 package_upgrade: true
 packages:
   - nginx

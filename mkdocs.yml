@@ -4,9 +4,17 @@ theme:
   name: material
   theme:
   palette: 
-    scheme: slate
+    scheme: default
     primary: black
     accent: blue
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+
 
 
 nav:
