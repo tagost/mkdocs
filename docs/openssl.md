@@ -10,7 +10,7 @@ cd ca/server/private/
 openssl req -new --newkey rsa:2048 -days 365 -nodes -x509 -subj '/CN=www.guillermososa.net' -keyout guillermososa.net.key -out guillermososa.net.crt
 openssl x509 -text -in guillermososa.net.crt -noout
 ```
-# Create the private key for root-ca,sub-ca,server
+## Create the private key for root-ca,sub-ca,server
 
 ```bash
 cd ca
@@ -19,7 +19,7 @@ openssl genrsa -aes256 -out sub-ca/private/sub-ca.key 4096
 openssl genrsa -out server/private/server.key 2048
 ```
 
-# Create root-ca/root-ca.conf
+## Create root-ca/root-ca.conf
 
 ```
 cat > root-ca/root-ca.conf <<EOF
@@ -121,7 +121,7 @@ extendedKeyUsage                = serverAuth
 EOF
 ```
 
-# Create the root certificate
+## Create the root certificate
 
 ```bash
 cd root-ca/
@@ -129,7 +129,7 @@ openssl req -config root-ca.conf -key private/ca.key -new -x509 -days 7500 -sha2
 openssl x509 -noout -in certs/ca.crt -text
 ```
 
-# Create the intermediate certificate
+## Create the intermediate certificate
 ```
 cd ../sub-ca
 
@@ -238,13 +238,13 @@ IP.1                            = 192.168.101.101 # Optionally, add an IP addres
 EOF
 ```
 
-# create the certificate signed request for the sub-ca
+## create the certificate signed request for the sub-ca
 
  ```
 openssl req -config sub-ca.conf -new -key private/sub-ca.key -sha256 -out csr/sub-ca.csr
  ```
 
-# create the sub-ca certificate 
+### create the sub-ca certificate 
 
 ```
 cd /root/ca/root-ca/
@@ -254,15 +254,15 @@ openssl x509 -noout -text -in ../sub-ca/certs/sub-ca.crt
 ```
 
 
-# Create server certificates
-# Create server csr         
+### Create server certificates
+#### Create server csr         
 
 ```bash
 cd /root/ca/server
 openssl req -key private/server.key -new -sha256 -out csr/server.csr
 ```
 
-# create the signed certificate 
+#### create the signed certificate 
 
 ```bash
 cd ../sub-ca/
@@ -272,7 +272,7 @@ cd ../server/certs/
 #for nginx
 cat server.crt ../../sub-ca/certs/sub-ca.crt > chained.crt
 ```
-# Test the server certificate
+#### Test the server certificate
 ```bash
 #add certificate to trusted
 cp /root/ca/root-ca/certs/ca.crt /usr/local/share/ca-certificates/
