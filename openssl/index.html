@@ -22,6 +22,10 @@
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.cbb835fc.min.css">
         
+          
+          
+          <meta name="theme-color" content="#000000">
+        
       
       
     
@@ -47,16 +51,12 @@
   
     
     
-      
     
     
     
-    
-    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="" data-md-color-accent="">
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="blue">
   
     
-    
-      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
@@ -103,28 +103,6 @@
         </div>
       </div>
     </div>
-    
-      <form class="md-header__option" data-md-component="palette">
-        
-          
-          
-          <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="" data-md-color-accent=""  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
-          
-            <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3Z"/></svg>
-            </label>
-          
-        
-          
-          
-          <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="" data-md-color-accent=""  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_2">
-          
-            <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6zm0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4zM7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
-            </label>
-          
-        
-      </form>
     
     
     
@@ -257,9 +235,115 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          OpenSSL
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         OpenSSL
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#create-the-private-key-for-root-casub-caserver" class="md-nav__link">
+    Create the private key for root-ca,sub-ca,server
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-root-caroot-caconf" class="md-nav__link">
+    Create root-ca/root-ca.conf
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-the-root-certificate" class="md-nav__link">
+    Create the root certificate
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-the-intermediate-certificate" class="md-nav__link">
+    Create the intermediate certificate
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-the-certificate-signed-request-for-the-sub-ca" class="md-nav__link">
+    create the certificate signed request for the sub-ca
+  </a>
+  
+    <nav class="md-nav" aria-label="create the certificate signed request for the sub-ca">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create-the-sub-ca-certificate" class="md-nav__link">
+    create the sub-ca certificate
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create-server-certificates" class="md-nav__link">
+    Create server certificates
+  </a>
+  
+    <nav class="md-nav" aria-label="Create server certificates">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create-server-csr" class="md-nav__link">
+    Create server csr
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create-the-signed-certificate" class="md-nav__link">
+    create the signed certificate
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#test-the-server-certificate" class="md-nav__link">
+    Test the server certificate
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -363,6 +447,96 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#create-the-private-key-for-root-casub-caserver" class="md-nav__link">
+    Create the private key for root-ca,sub-ca,server
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-root-caroot-caconf" class="md-nav__link">
+    Create root-ca/root-ca.conf
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-the-root-certificate" class="md-nav__link">
+    Create the root certificate
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-the-intermediate-certificate" class="md-nav__link">
+    Create the intermediate certificate
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-the-certificate-signed-request-for-the-sub-ca" class="md-nav__link">
+    create the certificate signed request for the sub-ca
+  </a>
+  
+    <nav class="md-nav" aria-label="create the certificate signed request for the sub-ca">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create-the-sub-ca-certificate" class="md-nav__link">
+    create the sub-ca certificate
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create-server-certificates" class="md-nav__link">
+    Create server certificates
+  </a>
+  
+    <nav class="md-nav" aria-label="Create server certificates">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create-server-csr" class="md-nav__link">
+    Create server csr
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create-the-signed-certificate" class="md-nav__link">
+    create the signed certificate
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#test-the-server-certificate" class="md-nav__link">
+    Test the server certificate
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -385,13 +559,13 @@ openssl rand -hex 16 &gt; ca/sub-ca/serial
 openssl req -new --newkey rsa:2048 -days 365 -nodes -x509 -subj '/CN=www.guillermososa.net' -keyout guillermososa.net.key -out guillermososa.net.crt
 openssl x509 -text -in guillermososa.net.crt -noout
 </code></pre>
-<h1 id="create-the-private-key-for-root-casub-caserver">Create the private key for root-ca,sub-ca,server</h1>
+<h2 id="create-the-private-key-for-root-casub-caserver">Create the private key for root-ca,sub-ca,server</h2>
 <pre><code class="language-bash">cd ca
 openssl genrsa -aes256 -out root-ca/private/ca.key 4096
 openssl genrsa -aes256 -out sub-ca/private/sub-ca.key 4096
 openssl genrsa -out server/private/server.key 2048
 </code></pre>
-<h1 id="create-root-caroot-caconf">Create root-ca/root-ca.conf</h1>
+<h2 id="create-root-caroot-caconf">Create root-ca/root-ca.conf</h2>
 <pre><code>cat &gt; root-ca/root-ca.conf &lt;&lt;EOF
 [ca]
 #/root/ca/root-ca/root-ca.conf
@@ -490,12 +664,12 @@ extendedKeyUsage                = serverAuth
 
 EOF
 </code></pre>
-<h1 id="create-the-root-certificate">Create the root certificate</h1>
+<h2 id="create-the-root-certificate">Create the root certificate</h2>
 <pre><code class="language-bash">cd root-ca/
 openssl req -config root-ca.conf -key private/ca.key -new -x509 -days 7500 -sha256 -extensions v3_ca -out certs/ca.crt
 openssl x509 -noout -in certs/ca.crt -text
 </code></pre>
-<h1 id="create-the-intermediate-certificate">Create the intermediate certificate</h1>
+<h2 id="create-the-intermediate-certificate">Create the intermediate certificate</h2>
 <pre><code>cd ../sub-ca
 
 cat &gt; sub-ca.conf &lt;&lt;EOF
@@ -602,20 +776,20 @@ IP.1                            = 192.168.101.101 # Optionally, add an IP addres
 
 EOF
 </code></pre>
-<h1 id="create-the-certificate-signed-request-for-the-sub-ca">create the certificate signed request for the sub-ca</h1>
+<h2 id="create-the-certificate-signed-request-for-the-sub-ca">create the certificate signed request for the sub-ca</h2>
 <p><code>openssl req -config sub-ca.conf -new -key private/sub-ca.key -sha256 -out csr/sub-ca.csr</code></p>
-<h1 id="create-the-sub-ca-certificate">create the sub-ca certificate</h1>
+<h3 id="create-the-sub-ca-certificate">create the sub-ca certificate</h3>
 <pre><code>cd /root/ca/root-ca/
 openssl ca -config root-ca.conf -extensions v3_intermediate_ca -days 3650 -notext -in ../sub-ca/csr/sub-ca.csr  -out ../sub-ca/certs/sub-ca.crt
 
 openssl x509 -noout -text -in ../sub-ca/certs/sub-ca.crt
 </code></pre>
-<h1 id="create-server-certificates">Create server certificates</h1>
-<h1 id="create-server-csr">Create server csr</h1>
+<h3 id="create-server-certificates">Create server certificates</h3>
+<h4 id="create-server-csr">Create server csr</h4>
 <pre><code class="language-bash">cd /root/ca/server
 openssl req -key private/server.key -new -sha256 -out csr/server.csr
 </code></pre>
-<h1 id="create-the-signed-certificate">create the signed certificate</h1>
+<h4 id="create-the-signed-certificate">create the signed certificate</h4>
 <pre><code class="language-bash">cd ../sub-ca/
 openssl ca -config sub-ca.conf -extensions server_cert -days 365 -notext -in ../server/csr/server.csr -out ../server/certs/server.crt
 
@@ -623,7 +797,7 @@ cd ../server/certs/
 #for nginx
 cat server.crt ../../sub-ca/certs/sub-ca.crt &gt; chained.crt
 </code></pre>
-<h1 id="test-the-server-certificate">Test the server certificate</h1>
+<h4 id="test-the-server-certificate">Test the server certificate</h4>
 <pre><code class="language-bash">#add certificate to trusted
 cp /root/ca/root-ca/certs/ca.crt /usr/local/share/ca-certificates/
 update-ca-certificates
