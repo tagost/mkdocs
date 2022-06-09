@@ -33,3 +33,5 @@ extra:
     property: G-40ENHFYR3B
 
 repo_url: https://github.com/tagost/mkdocs
+repo_name: squidfunk/mkdocs-material
+
